@@ -12,14 +12,14 @@ defmodule StripeMock.Pagination do
           object: "list",
           url: "/v1/customers",
           has_more: page.has_more,
-          data: render_many(page.data, view, template)
+          data: render_many(page.data, view, template, conn: conn)
         }
       end
     end
   end
 
   @spec paginate(list(), map()) :: Page.t()
-  def paginate(objects, params) do
+  def paginate(objects, params \\ %{}) do
     limit = get_limit(params)
 
     objects =

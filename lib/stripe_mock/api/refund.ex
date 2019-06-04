@@ -7,6 +7,7 @@ defmodule StripeMock.API.Refund do
   @foreign_key_type :binary_id
   schema "refunds" do
     field :amount, :integer
+    field :created, :integer
     field :metadata, StripeMock.Metadata, default: %{}
     field :reason, :string
 

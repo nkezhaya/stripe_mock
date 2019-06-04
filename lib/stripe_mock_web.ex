@@ -23,7 +23,7 @@ defmodule StripeMockWeb do
 
       import Plug.Conn
       import StripeMockWeb.Gettext
-      import StripeMock.Pagination, only: [paginate: 2]
+      import StripeMock.Pagination, only: [paginate: 1, paginate: 2]
       alias StripeMockWeb.Router.Helpers, as: Routes
       alias StripeMockWeb.Plug, as: SMPlug
     end

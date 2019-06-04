@@ -25,6 +25,7 @@ defmodule StripeMockWeb.RefundControllerTest do
                "id" => "re_" <> _,
                "amount" => 5000,
                "charge" => "ch_" <> _,
+               "created" => _,
                "metadata" => %{}
              } = json_response(conn, 200)
     end
