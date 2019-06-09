@@ -20,6 +20,7 @@ defmodule StripeMockWeb.ChargeView do
       description: charge.description,
       metadata: charge.metadata,
       object: "charge",
+      source: render(StripeMockWeb.CardView, "card.json", card: charge.source),
       statement_descriptor: charge.statement_descriptor,
       transfer_group: charge.transfer_group
     }

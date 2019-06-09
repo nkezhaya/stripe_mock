@@ -11,11 +11,16 @@ defmodule StripeMockWeb.Router do
 
     resources "/customers", CustomerController do
       resources "/sources", SourceController
+      post "/sources/:id", SourceController, :update
     end
 
     resources "/charges", ChargeController, except: [:delete]
     resources "/refunds", RefundController, except: [:delete]
     resources "/sources", SourceController, only: [:show]
     resources "/tokens", TokenController, only: [:create, :show]
+
+    post "/charges/:id", ChargeController, :update
+    post "/customers/:id", CustomerController, :update
+    post "/refunds/:id", RefundController, :update
   end
 end

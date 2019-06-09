@@ -1,7 +1,5 @@
 defmodule StripeMock.API.Token do
-  use Ecto.Schema
-  import Ecto.Changeset
-  alias StripeMock.API
+  use StripeMock.Schema
 
   @foreign_key_type :binary_id
   schema "tokens" do
@@ -16,10 +14,10 @@ defmodule StripeMock.API.Token do
   @doc false
   def changeset(token, attrs) do
     token
-    |> cast(attrs, [:client_ip])
+    |> cast(attrs, [:client_ip, :type])
     |> cast_assoc(:card, with: &API.Card.token_changeset/2)
     |> set_type()
-    |> validate_required([:client_ip, :type])
+    |> validate_required([:type])
   end
 
   defp set_type(changeset) do

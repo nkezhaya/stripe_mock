@@ -2,7 +2,6 @@ defmodule StripeMockWeb.SourceControllerTest do
   use StripeMockWeb.ConnCase
   @moduletag :source
 
-  alias StripeMock.API
   alias StripeMock.API.Card
   alias StripeMock.CardFixture
 
@@ -85,19 +84,5 @@ defmodule StripeMockWeb.SourceControllerTest do
 
       assert response["deleted"]
     end
-  end
-
-  defp create_card(%{conn: conn, customer: customer}) do
-    %{"id" => token} =
-      conn
-      |> post(Routes.token_path(conn, :create), card: @card_attrs)
-      |> json_response(201)
-
-    %{"id" => id, "object" => "card"} =
-      conn
-      |> post(Routes.customer_source_path(conn, :create, customer.id), source: token)
-      |> json_response(201)
-
-    [card: API.get_card!(id)]
   end
 end

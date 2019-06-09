@@ -1,6 +1,5 @@
 defmodule StripeMock.API.Customer do
-  use Ecto.Schema
-  import Ecto.Changeset
+  use StripeMock.Schema
 
   @primary_key {:id, :binary_id, autogenerate: false}
   schema "customers" do
@@ -9,7 +8,7 @@ defmodule StripeMock.API.Customer do
     field :deleted, :boolean, default: false
     field :description, :string
     field :email, :string
-    field :metadata, StripeMock.Metadata, default: %{}
+    field :metadata, StripeMock.Type.Metadata, default: %{}
     field :name, :string
     field :phone, :string
   end
