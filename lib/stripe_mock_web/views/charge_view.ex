@@ -20,9 +20,21 @@ defmodule StripeMockWeb.ChargeView do
       description: charge.description,
       metadata: charge.metadata,
       object: "charge",
+      outcome: render_outcome(charge),
       source: render(StripeMockWeb.CardView, "card.json", card: charge.source),
       statement_descriptor: charge.statement_descriptor,
       transfer_group: charge.transfer_group
+    }
+  end
+
+  defp render_outcome(_charge) do
+    %{
+      network_status: "approved_by_network",
+      reason: nil,
+      risk_level: "normal",
+      risk_score: 0,
+      seller_message: "Approved by network.",
+      type: "authorized"
     }
   end
 end

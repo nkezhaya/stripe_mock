@@ -69,7 +69,7 @@ defmodule StripeMock.API.Charge do
         validate_required(changeset, :source_id)
 
       {nil, _source_id} ->
-        case source do
+        case source |> IO.inspect() do
           %{card: %{customer_id: nil}} -> changeset
           _ -> validate_required(changeset, :customer_id)
         end
