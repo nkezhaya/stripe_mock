@@ -1,14 +1,12 @@
 defmodule StripeMock.API.Refund do
-  use Ecto.Schema
-  import Ecto.Changeset
-
-  alias StripeMock.{API, Repo}
+  use StripeMock.Schema
+  alias StripeMock.Repo
 
   @foreign_key_type :binary_id
   schema "refunds" do
     field :amount, :integer
     field :created, :integer
-    field :metadata, StripeMock.Metadata, default: %{}
+    field :metadata, StripeMock.Type.Metadata, default: %{}
     field :reason, :string
 
     belongs_to :charge, API.Charge

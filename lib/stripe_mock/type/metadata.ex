@@ -1,4 +1,4 @@
-defmodule StripeMock.Metadata do
+defmodule StripeMock.Type.Metadata do
   @behaviour Ecto.Type
 
   def type(), do: :map

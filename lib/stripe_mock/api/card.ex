@@ -1,13 +1,11 @@
 defmodule StripeMock.API.Card do
-  use Ecto.Schema
-  import Ecto.Changeset
-  alias StripeMock.API
+  use StripeMock.Schema
 
   schema "cards" do
     field :brand, :string
     field :created, :integer
     field :deleted, :boolean
-    field :metadata, StripeMock.Metadata, default: %{}
+    field :metadata, StripeMock.Type.Metadata, default: %{}
     field :last4, :string
     field :source, :string
 
@@ -24,8 +22,6 @@ defmodule StripeMock.API.Card do
     card
     |> cast(attrs, [:source, :metadata])
     |> validate_required([:source, :metadata])
-    |> set_brand()
-    |> set_last4()
   end
 
   @doc false
@@ -69,7 +65,7 @@ defmodule StripeMock.API.Card do
   defp set_last4(changeset) do
     case get_field(changeset, :number) do
       number when is_bitstring(number) ->
-        last4 = String.split_at(number, -6) |> elem(1)
+        last4 = String.split_at(number, -4) |> elem(1)
         put_change(changeset, :last4, last4)
 
       _ ->

@@ -6,7 +6,7 @@ defmodule StripeMock.Repo do
   State structure is:
 
       %{
-        customers: %{
+        customer: %{
           "cus_123123" => %Customer{}
         }
       }
@@ -27,7 +27,7 @@ defmodule StripeMock.Repo do
 
   def get!(schema, id) do
     case GenServer.call(pid(), {:get, schema, id}) do
-      nil -> raise "Not found."
+      nil -> raise "No #{schema} found with id #{id}."
       record -> record
     end
   end
@@ -55,7 +55,7 @@ defmodule StripeMock.Repo do
 
   @impl true
   def handle_call({:all, schema}, _from, state) do
-    with schemas when is_map(schemas) <- Map.get(state, schema),
+    with schemas when is_map(schemas) <- Map.get(state, type(schema)),
          objects <- Map.values(schemas),
          not_deleted <-
            Enum.filter(objects, fn
@@ -79,7 +79,7 @@ defmodule StripeMock.Repo do
   @impl true
   def handle_call({:get, schema, id}, _from, state) do
     object =
-      with schemas when is_map(schemas) <- Map.get(state, schema),
+      with schemas when is_map(schemas) <- Map.get(state, type(schema)),
            object when is_map(object) <- Map.get(schemas, id) do
         object
       else
@@ -118,6 +118,8 @@ defmodule StripeMock.Repo do
         changeset
       end
 
+    changeset = set_client_ip(changeset)
+
     # Run through changed assocs and save
     {changeset, state} =
       Enum.reduce_while(changeset.changes, {changeset, state}, fn
@@ -147,7 +149,7 @@ defmodule StripeMock.Repo do
     object = apply_changes(changeset)
 
     # Put the object into the new state
-    type = object.__struct__
+    type = type(object)
 
     type_map =
       case Map.get(state, type) do
@@ -164,15 +166,30 @@ defmodule StripeMock.Repo do
       {:error, changeset}
   end
 
+  if Mix.env() == :test do
+    defp set_client_ip(changeset) do
+      if Map.has_key?(changeset.data, :client_ip) and is_nil(get_field(changeset, :client_ip)) do
+        put_change(changeset, :client_ip, "0.0.0.0")
+      else
+        changeset
+      end
+    end
+  else
+    defp set_client_ip(changeset) do
+      changeset
+    end
+  end
+
   defp generate_id(schema) do
     prefix(schema) <> "_" <> StripeMock.ID.generate()
   end
 
-  def type(%API.Card{}), do: :card
-  def type(%API.Charge{}), do: :charge
-  def type(%API.Customer{}), do: :customer
-  def type(%API.Refund{}), do: :refund
-  def type(%API.Token{}), do: :token
+  def type(%{} = map), do: type(map.__struct__)
+  def type(API.Card), do: :card
+  def type(API.Charge), do: :charge
+  def type(API.Customer), do: :customer
+  def type(API.Refund), do: :refund
+  def type(API.Token), do: :token
 
   def prefix(%API.Card{}), do: "card"
   def prefix(%API.Charge{}), do: "ch"

@@ -5,8 +5,11 @@ defmodule StripeMockWeb.ChargeControllerTest do
   alias StripeMock.API.Charge
 
   setup :create_customer
+  setup :create_card
 
   describe "index" do
+    setup :create_charge
+
     test "lists all charges", %{conn: conn} do
       conn = get(conn, Routes.charge_path(conn, :index))
       assert is_list(json_response(conn, 200)["data"])
@@ -14,8 +17,16 @@ defmodule StripeMockWeb.ChargeControllerTest do
   end
 
   describe "create charge" do
-    test "renders charge when data is valid", %{conn: conn, customer: customer} do
-      conn = post(conn, Routes.charge_path(conn, :create), create_attrs(customer.id))
+    setup :create_token
+
+    test "renders charge when the customer and card are valid", %{
+      conn: conn,
+      customer: customer,
+      token: token
+    } do
+      params = create_attrs() |> Map.merge(%{customer_id: customer.id, source: token.id})
+
+      conn = post(conn, Routes.charge_path(conn, :create), params)
       assert %{"id" => id} = json_response(conn, 201)
 
       conn = get(conn, Routes.charge_path(conn, :show, id))
@@ -26,6 +37,29 @@ defmodule StripeMockWeb.ChargeControllerTest do
                "capture" => true,
                "currency" => "some currency",
                "customer" => "cus_" <> _,
+               "description" => "some description",
+               "metadata" => %{},
+               "statement_descriptor" => "some statement_descriptor",
+               "transfer_group" => "some transfer_group"
+             } = json_response(conn, 200)
+    end
+
+    test "renders charge when the token is valid and no customer is provided", %{
+      conn: conn,
+      token: token
+    } do
+      params = create_attrs() |> Map.merge(%{source: token.id})
+      conn = post(conn, Routes.charge_path(conn, :create), params)
+      assert %{"id" => id} = json_response(conn, 201)
+
+      conn = get(conn, Routes.charge_path(conn, :show, id))
+
+      assert %{
+               "id" => id,
+               "amount" => 5000,
+               "capture" => true,
+               "currency" => "some currency",
+               "customer" => nil,
                "description" => "some description",
                "metadata" => %{},
                "statement_descriptor" => "some statement_descriptor",
@@ -60,12 +94,11 @@ defmodule StripeMockWeb.ChargeControllerTest do
     end
   end
 
-  def create_attrs(customer_id) do
+  def create_attrs() do
     %{
       amount: 5000,
       capture: true,
       currency: "some currency",
-      customer: customer_id,
       description: "some description",
       metadata: %{},
       statement_descriptor: "some statement_descriptor",
@@ -88,6 +121,7 @@ defmodule StripeMockWeb.ChargeControllerTest do
       customer: nil,
       description: nil,
       metadata: nil,
+      source: nil,
       statement_descriptor: nil,
       transfer_group: nil
     }

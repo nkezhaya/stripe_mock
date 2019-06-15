@@ -7,6 +7,12 @@ defmodule StripeMock.TestHelper do
     name: "Foo"
   }
 
+  def create_card(%{customer: customer} = ctx) do
+    [token: token] = create_token(ctx)
+    {:ok, card} = API.create_card(customer, %{source: token.id})
+    [card: card]
+  end
+
   def create_customer() do
     {:ok, customer} = API.create_customer(@create_attrs)
     customer
@@ -21,14 +27,17 @@ defmodule StripeMock.TestHelper do
   end
 
   def create_charge(%API.Customer{} = customer) do
+    [token: token] = create_token()
+
     {:ok, charge} =
       API.create_charge(%{
         amount: 5000,
         capture: true,
         currency: "some currency",
-        customer: customer.id,
+        customer_id: customer.id,
         description: "some description",
         metadata: %{},
+        source_id: token.id,
         statement_descriptor: "some statement_descriptor",
         transfer_group: "some transfer_group"
       })
@@ -46,5 +55,11 @@ defmodule StripeMock.TestHelper do
 
     {:ok, refund} = API.create_refund(params)
     {:ok, refund: refund}
+  end
+
+  def create_token(_ctx \\ %{}) do
+    params = %{card: StripeMock.CardFixture.valid_card(), client_ip: "0.0.0.0"}
+    {:ok, token} = API.create_token(params)
+    [token: token]
   end
 end
