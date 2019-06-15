@@ -85,6 +85,24 @@ defmodule StripeMockWeb.SourceControllerTest do
 
       assert response["deleted"]
     end
+
+    test "deleted cards no longer appear in index", %{conn: conn, card: card} do
+      %{"data" => data} =
+        conn
+        |> get(Routes.customer_source_path(conn, :index, card.customer_id, object: "card"))
+        |> json_response(200)
+
+      assert Enum.find(data, &(&1["id"] == card.id))
+
+      delete(conn, Routes.customer_source_path(conn, :delete, card.customer_id, card))
+
+      %{"data" => data} =
+        conn
+        |> get(Routes.customer_source_path(conn, :index, card.customer_id, object: "card"))
+        |> json_response(200)
+
+      refute Enum.find(data, &(&1["id"] == card.id))
+    end
   end
 
   defp create_card(%{conn: conn, customer: customer}) do

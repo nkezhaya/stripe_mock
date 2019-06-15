@@ -55,8 +55,15 @@ defmodule StripeMock.Repo do
 
   @impl true
   def handle_call({:all, schema}, _from, state) do
-    case Map.get(state, schema) do
-      schemas when is_map(schemas) -> {:reply, Map.values(schemas), state}
+    with schemas when is_map(schemas) <- Map.get(state, schema),
+         objects <- Map.values(schemas),
+         not_deleted <-
+           Enum.filter(objects, fn
+             %{deleted: true} -> false
+             _ -> true
+           end) do
+      {:reply, not_deleted, state}
+    else
       _ -> {:reply, [], state}
     end
   end
