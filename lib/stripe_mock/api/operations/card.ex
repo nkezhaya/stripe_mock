@@ -8,7 +8,7 @@ defmodule StripeMock.API.Operations.Card do
     |> Enum.filter(&(&1.customer_id == customer.id))
   end
 
-  def get_card(id), do: Repo.get(Card, id)
+  def get_card(id), do: Repo.fetch(Card, id)
   def get_card!(id), do: Repo.get!(Card, id)
 
   def create_card(customer, attrs) do

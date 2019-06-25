@@ -6,13 +6,7 @@ defmodule StripeMock.API.Operations.Customer do
     Repo.all(Customer)
   end
 
-  def get_customer(id) do
-    case Repo.get(Customer, id) do
-      nil -> {:error, :not_found}
-      customer -> {:ok, customer}
-    end
-  end
-
+  def get_customer(id), do: Repo.fetch(Customer, id)
   def get_customer!(id), do: Repo.get!(Customer, id)
 
   def create_customer(attrs \\ %{}) do

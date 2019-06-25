@@ -51,9 +51,8 @@ defmodule StripeMockWeb.SourceController do
   end
 
   def delete(conn, %{"id" => id}) do
-    card = API.get_card!(id)
-
-    with {:ok, source} <- API.delete_card(card) do
+    with {:ok, card} <- API.get_card(id),
+         {:ok, source} <- API.delete_card(card) do
       render(conn, "show.json", source: source)
     end
   end

@@ -15,6 +15,7 @@ defmodule StripeMock.API do
 
   # Cards
   defdelegate list_cards(customer), to: Ops.Card
+  defdelegate get_card(id), to: Ops.Card
   defdelegate get_card!(id), to: Ops.Card
   defdelegate create_card(customer, attrs \\ %{}), to: Ops.Card
   defdelegate create_customer_card_from_source(customer, source, metadata \\ %{}), to: Ops.Card
