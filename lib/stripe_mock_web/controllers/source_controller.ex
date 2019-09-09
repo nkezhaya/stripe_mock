@@ -42,7 +42,7 @@ defmodule StripeMockWeb.SourceController do
     |> render("show.json", card: card)
   end
 
-  def update(conn, %{"id" => id, "card" => card_params}) do
+  def update(conn, %{"id" => id} = card_params) do
     card = API.get_card!(id)
 
     with {:ok, source} <- API.update_card(card, card_params) do
