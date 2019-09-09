@@ -21,8 +21,9 @@ defmodule StripeMockWeb.CustomerController do
   end
 
   def show(conn, %{"id" => id}) do
-    customer = API.get_customer!(id)
-    render(conn, "show.json", customer: customer)
+    with {:ok, customer} <- API.get_customer(id) do
+      render(conn, "show.json", customer: customer)
+    end
   end
 
   def update(conn, %{"id" => id} = customer_params) do

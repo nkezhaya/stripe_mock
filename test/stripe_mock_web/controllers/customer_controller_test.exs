@@ -24,6 +24,20 @@ defmodule StripeMockWeb.CustomerControllerTest do
     end
   end
 
+  describe "show" do
+    setup :create_customer
+
+    test "renders customer data", %{conn: conn, customer: customer} do
+      conn = get(conn, Routes.customer_path(conn, :show, customer.id))
+      assert %{"id" => id} = json_response(conn, 200)
+    end
+
+    test "renders 404 on not found", %{conn: conn} do
+      conn = get(conn, Routes.customer_path(conn, :show, "invalid_id"))
+      assert %{} = json_response(conn, 404)
+    end
+  end
+
   describe "create customer" do
     test "renders customer when data is valid", %{conn: conn} do
       conn = post(conn, Routes.customer_path(conn, :create), @create_attrs)

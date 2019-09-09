@@ -27,8 +27,11 @@ defmodule StripeMock.Repo do
 
   def get!(schema, id) do
     case GenServer.call(pid(), {:get, schema, id}) do
-      nil -> raise "No #{schema} found with id #{id}."
-      record -> record
+      nil ->
+        raise Ecto.NoResultsError, message: "No #{schema} found with id #{id}.", queryable: schema
+
+      record ->
+        record
     end
   end
 
