@@ -23,6 +23,18 @@ config :logger, :console,
 # Use Jason for JSON parsing in Phoenix
 config :phoenix, :json_library, Jason
 
+{uri, _} = System.cmd("pg_tmp", ["-t"])
+[_, port] = Regex.scan(~r/\:(\d+)\//, uri) |> List.flatten()
+
+config :stripe_mock, StripeMock.Repo,
+  adapter: Ecto.Adapters.Postgres,
+  username: "postgres",
+  password: "postgres",
+  database: "test",
+  hostname: "localhost",
+  port: port,
+  pool_size: 10
+
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
 import_config "#{Mix.env()}.exs"

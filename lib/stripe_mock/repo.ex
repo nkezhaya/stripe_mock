@@ -1,16 +1,4 @@
 defmodule StripeMock.Repo do
-  @moduledoc """
-  This is where we store everything. Obviously, don't call any of these
-  functions yourself.
-
-  State structure is:
-
-      %{
-        customer: %{
-          "cus_123123" => %Customer{}
-        }
-      }
-  """
   use GenServer
   import Ecto.Changeset
   alias Ecto.Changeset
