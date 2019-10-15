@@ -47,6 +47,10 @@ defmodule StripeMock.API.Charge do
     |> validate_required([:amount, :currency])
   end
 
+  @doc false
+  def capture_changeset(payment_intent, charge) do
+  end
+
   defp set_customer_and_source(changeset) do
     customer =
       with customer_id when not is_nil(customer_id) <- get_field(changeset, :customer_id) do

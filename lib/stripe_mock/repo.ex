@@ -191,12 +191,14 @@ defmodule StripeMock.Repo do
   def type(API.Card), do: :card
   def type(API.Charge), do: :charge
   def type(API.Customer), do: :customer
+  def type(API.PaymentIntent), do: :payment_intent
   def type(API.Refund), do: :refund
   def type(API.Token), do: :token
 
   def prefix(%API.Card{}), do: "card"
   def prefix(%API.Charge{}), do: "ch"
   def prefix(%API.Customer{}), do: "cus"
+  def prefix(%API.PaymentIntent{}), do: "pi"
   def prefix(%API.Refund{}), do: "re"
   def prefix(%API.Token{}), do: "tok"
 end

@@ -16,6 +16,7 @@ defmodule StripeMockWeb.Router do
 
     resources "/charges", ChargeController, except: [:delete]
     resources "/refunds", RefundController, except: [:delete]
+    resources "/payment_intents", PaymentIntentController, except: [:delete]
     resources "/sources", SourceController, only: [:show]
     resources "/tokens", TokenController, only: [:create, :show]
 

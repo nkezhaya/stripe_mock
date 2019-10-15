@@ -26,6 +26,15 @@ defmodule StripeMock.API do
   # defdelegate attach_source(source, customer), to: Ops.Source
   # defdelegate detach_source(source, customer), to: Ops.Source
 
+  # PaymentIntents
+  defdelegate list_payment_intents(), to: Ops.PaymentIntent
+  defdelegate get_payment_intent(id), to: Ops.PaymentIntent
+  defdelegate get_payment_intent!(id), to: Ops.PaymentIntent
+  defdelegate create_payment_intent(attrs \\ %{}), to: Ops.PaymentIntent
+  defdelegate update_payment_intent(payment_intent, attrs \\ %{}), to: Ops.PaymentIntent
+  defdelegate confirm_payment_intent(payment_intent), to: Ops.PaymentIntent
+  defdelegate capture_payment_intent(payment_intent), to: Ops.PaymentIntent
+
   # Charges
   defdelegate list_charges(), to: Ops.Charge
   defdelegate get_charge(id), to: Ops.Charge
