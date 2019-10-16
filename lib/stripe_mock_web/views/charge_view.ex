@@ -21,10 +21,11 @@ defmodule StripeMockWeb.ChargeView do
       metadata: charge.metadata,
       object: "charge",
       outcome: render_outcome(charge),
-      source: render(StripeMockWeb.CardView, "card.json", card: charge.source),
+      payment_method: render(StripeMockWeb.CardView, "card.json", card: charge.card),
       statement_descriptor: charge.statement_descriptor,
       transfer_group: charge.transfer_group
     }
+    |> as_map()
   end
 
   defp render_outcome(_charge) do

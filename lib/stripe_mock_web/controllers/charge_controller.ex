@@ -4,8 +4,7 @@ defmodule StripeMockWeb.ChargeController do
   alias StripeMock.API
   alias StripeMock.API.Charge
 
-  plug SMPlug.ConvertParams,
-       %{"customer" => "customer_id", "source" => "source_id"} when action in [:create, :update]
+  plug SMPlug.ConvertParams, %{"customer" => "customer_id"} when action in [:create, :update]
 
   action_fallback StripeMockWeb.FallbackController
 

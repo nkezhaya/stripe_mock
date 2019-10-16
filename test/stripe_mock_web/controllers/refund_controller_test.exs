@@ -16,21 +16,23 @@ defmodule StripeMockWeb.RefundControllerTest do
 
   describe "create refund" do
     test "renders refund when data is valid", %{conn: conn, charge: charge} do
+      charge_id = charge.id
       conn = post(conn, Routes.refund_path(conn, :create), create_attrs(charge.id))
       assert %{"id" => id} = json_response(conn, 201)
 
       conn = get(conn, Routes.refund_path(conn, :show, id))
 
       assert %{
-               "id" => "re_" <> _,
+               "id" => _,
                "amount" => 5000,
-               "charge" => "ch_" <> _,
+               "charge" => ^charge_id,
                "created" => _,
                "metadata" => %{}
              } = json_response(conn, 200)
     end
 
     test "amount defaults to full amount of the charge", %{conn: conn, charge: charge} do
+      charge_id = charge.id
       params = %{create_attrs(charge.id) | amount: nil}
       conn = post(conn, Routes.refund_path(conn, :create), params)
       amount = charge.amount
@@ -40,9 +42,9 @@ defmodule StripeMockWeb.RefundControllerTest do
       conn = get(conn, Routes.refund_path(conn, :show, id))
 
       assert %{
-               "id" => "re_" <> _,
+               "id" => _,
                "amount" => ^amount,
-               "charge" => "ch_" <> _,
+               "charge" => ^charge_id,
                "metadata" => %{}
              } = json_response(conn, 200)
     end

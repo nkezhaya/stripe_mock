@@ -40,7 +40,7 @@ defmodule StripeMockWeb.SourceControllerTest do
         |> post(Routes.customer_source_path(conn, :create, customer.id), source: token)
         |> json_response(201)
 
-      assert id =~ ~r/^card_/
+      assert id
     end
 
     test "renders errors when data is invalid", %{conn: conn, customer: customer} do

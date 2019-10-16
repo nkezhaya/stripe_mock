@@ -44,6 +44,7 @@ defmodule StripeMockWeb do
       import StripeMockWeb.ViewHelpers
       import StripeMockWeb.Gettext
       alias StripeMockWeb.Router.Helpers, as: Routes
+      alias StripeMock.API
     end
   end
 

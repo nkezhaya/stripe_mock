@@ -1,14 +1,14 @@
 defmodule StripeMock.API.Token do
   use StripeMock.Schema
 
-  @foreign_key_type :binary_id
   schema "tokens" do
     field :client_ip, :string
-    field :created, :integer
     field :type, :string
     field :used, :boolean, default: false
 
     belongs_to :card, API.Card
+
+    timestamps()
   end
 
   @doc false

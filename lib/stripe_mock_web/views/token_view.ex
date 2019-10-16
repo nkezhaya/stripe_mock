@@ -26,5 +26,6 @@ defmodule StripeMockWeb.TokenView do
     else
       object
     end
+    |> as_map()
   end
 end

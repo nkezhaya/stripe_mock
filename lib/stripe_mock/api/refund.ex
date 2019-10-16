@@ -2,14 +2,14 @@ defmodule StripeMock.API.Refund do
   use StripeMock.Schema
   alias StripeMock.Repo
 
-  @foreign_key_type :binary_id
   schema "refunds" do
     field :amount, :integer
-    field :created, :integer
-    field :metadata, StripeMock.Type.Metadata, default: %{}
+    field :metadata, :map, default: %{}
     field :reason, :string
 
     belongs_to :charge, API.Charge
+
+    timestamps()
   end
 
   @doc false

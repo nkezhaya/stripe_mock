@@ -37,7 +37,7 @@ defmodule StripeMock.TestHelper do
         customer_id: customer.id,
         description: "some description",
         metadata: %{},
-        source_id: token.id,
+        source: token.id,
         statement_descriptor: "some statement_descriptor",
         transfer_group: "some transfer_group"
       })

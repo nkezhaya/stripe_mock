@@ -12,13 +12,13 @@ defmodule StripeMockWeb.TokenControllerTest do
       conn = get(conn, Routes.token_path(conn, :show, id))
 
       assert %{
-               "id" => "tok_" <> _,
+               "id" => _,
                "client_ip" => "127.0.0.1",
                "created" => created,
                "object" => "token",
                "type" => "card",
                "used" => false,
-               "card" => %{"id" => "card_" <> _}
+               "card" => %{"id" => _}
              } = json_response(conn, 200)
 
       assert is_integer(created)
