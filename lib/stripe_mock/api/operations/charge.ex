@@ -9,9 +9,9 @@ defmodule StripeMock.API.Operations.Charge do
   end
 
   def get_charge(id) do
-    with {:ok, charge} <- Repo.fetch(Charge, id) do
-      {:ok, preload_source(charge)}
-    end
+    Charge
+    |> Repo.fetch(id)
+    |> preload_source()
   end
 
   def create_charge(attrs \\ %{}) do

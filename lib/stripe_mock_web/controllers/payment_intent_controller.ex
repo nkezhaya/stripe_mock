@@ -2,7 +2,10 @@ defmodule StripeMockWeb.PaymentIntentController do
   use StripeMockWeb, :controller
 
   alias StripeMock.API
-  alias StripeMock.API.PaymentIntent
+
+  plug SMPlug.ConvertParams,
+       %{"customer" => "customer_id", "payment_method" => "payment_method_id"}
+       when action in [:create, :update]
 
   action_fallback StripeMockWeb.FallbackController
 
@@ -27,26 +30,23 @@ defmodule StripeMockWeb.PaymentIntentController do
   end
 
   def update(conn, %{"id" => id} = payment_intent_params) do
-    payment_intent = API.get_payment_intent!(id)
-
-    with {:ok, payment_intent} <-
+    with {:ok, payment_intent} <- API.get_payment_intent(id),
+         {:ok, payment_intent} <-
            API.update_payment_intent(payment_intent, payment_intent_params) do
       render(conn, "show.json", payment_intent: payment_intent)
     end
   end
 
-  def confirm(conn, %{"id" => id} = payment_intent_params) do
-    payment_intent = API.get_payment_intent!(id)
-
-    with {:ok, payment_intent} <- API.confirm_payment_intent(payment_intent) do
+  def confirm(conn, %{"id" => id}) do
+    with {:ok, payment_intent} <- API.get_payment_intent(id),
+         {:ok, payment_intent} <- API.confirm_payment_intent(payment_intent) do
       render(conn, "show.json", payment_intent: payment_intent)
     end
   end
 
-  def capture(conn, %{"id" => id} = payment_intent_params) do
-    payment_intent = API.get_payment_intent!(id)
-
-    with {:ok, payment_intent} <- API.capture_payment_intent(payment_intent) do
+  def capture(conn, %{"id" => id}) do
+    with {:ok, payment_intent} <- API.get_payment_intent(id),
+         {:ok, payment_intent} <- API.capture_payment_intent(payment_intent) do
       render(conn, "show.json", payment_intent: payment_intent)
     end
   end

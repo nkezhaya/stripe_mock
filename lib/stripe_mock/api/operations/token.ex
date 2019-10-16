@@ -3,7 +3,7 @@ defmodule StripeMock.API.Operations.Token do
 
   alias Ecto.Multi
   alias StripeMock.Repo
-  alias StripeMock.API.{Token, Source}
+  alias StripeMock.API.{Token, PaymentMethod}
 
   def get_token(id) do
     Token
@@ -14,9 +14,9 @@ defmodule StripeMock.API.Operations.Token do
   def create_token(attrs) do
     Multi.new()
     |> Multi.insert(:token, Token.changeset(%Token{}, attrs))
-    |> Multi.run(:source, fn _repo, %{token: token} ->
-      %Source{}
-      |> Source.changeset(%{token_id: token.id})
+    |> Multi.run(:payment_method, fn _repo, %{token: token} ->
+      %PaymentMethod{}
+      |> PaymentMethod.changeset(%{token_id: token.id})
       |> Repo.insert()
     end)
     |> Repo.transaction()

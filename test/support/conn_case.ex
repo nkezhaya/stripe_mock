@@ -28,6 +28,9 @@ defmodule StripeMockWeb.ConnCase do
   end
 
   setup _tags do
+    :ok = Ecto.Adapters.SQL.Sandbox.checkout(StripeMock.Repo)
+    Ecto.Adapters.SQL.Sandbox.mode(StripeMock.Repo, {:shared, self()})
+
     {:ok, conn: Phoenix.ConnTest.build_conn()}
   end
 

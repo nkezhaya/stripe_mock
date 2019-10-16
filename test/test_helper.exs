@@ -45,6 +45,24 @@ defmodule StripeMock.TestHelper do
     charge
   end
 
+  def create_payment_intent(%{customer: customer}) do
+    [payment_intent: create_payment_intent(customer)]
+  end
+
+  def create_payment_intent(%API.Customer{} = customer) do
+    [token: token] = create_token()
+
+    {:ok, charge} =
+      API.create_payment_intent(%{
+        amount: 5000,
+        currency: "some currency",
+        customer_id: customer.id,
+        payment_method_id: token.id
+      })
+
+    charge
+  end
+
   def create_refund(%{charge: charge}) do
     params = %{
       amount: 5000,

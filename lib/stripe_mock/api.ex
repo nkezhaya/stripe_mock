@@ -29,7 +29,6 @@ defmodule StripeMock.API do
   # PaymentIntents
   defdelegate list_payment_intents(), to: Ops.PaymentIntent
   defdelegate get_payment_intent(id), to: Ops.PaymentIntent
-  defdelegate get_payment_intent!(id), to: Ops.PaymentIntent
   defdelegate create_payment_intent(attrs \\ %{}), to: Ops.PaymentIntent
   defdelegate update_payment_intent(payment_intent, attrs \\ %{}), to: Ops.PaymentIntent
   defdelegate confirm_payment_intent(payment_intent), to: Ops.PaymentIntent

@@ -2,7 +2,7 @@ defmodule StripeMock.API.Operations.Card do
   import Ecto.Query
   alias Ecto.Multi
   alias StripeMock.Repo
-  alias StripeMock.API.{Card, Source}
+  alias StripeMock.API.{Card, PaymentMethod}
 
   def list_cards(customer) do
     Card
@@ -17,9 +17,9 @@ defmodule StripeMock.API.Operations.Card do
   def create_card(customer, attrs) do
     Multi.new()
     |> Multi.insert(:card, Card.create_changeset(%Card{customer_id: customer.id}, attrs))
-    |> Multi.run(:source, fn _repo, %{card: card} ->
-      %Source{}
-      |> Source.changeset(%{card_id: card.id})
+    |> Multi.run(:payment_method, fn _repo, %{card: card} ->
+      %PaymentMethod{}
+      |> PaymentMethod.changeset(%{card_id: card.id})
       |> Repo.insert()
     end)
     |> Repo.transaction()

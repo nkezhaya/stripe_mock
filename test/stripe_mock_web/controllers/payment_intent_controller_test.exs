@@ -1,40 +1,39 @@
-defmodule StripeMockWeb.ChargeControllerTest do
+defmodule StripeMockWeb.PaymentIntentControllerTest do
   use StripeMockWeb.ConnCase
-  @moduletag :charge
+  @moduletag :payment_intent
 
-  alias StripeMock.API.Charge
+  alias StripeMock.API.PaymentIntent
 
   setup :create_customer
   setup :create_card
 
   describe "index" do
-    setup :create_charge
+    setup :create_payment_intent
 
-    test "lists all charges", %{conn: conn} do
-      conn = get(conn, Routes.charge_path(conn, :index))
+    test "lists all payment intents", %{conn: conn} do
+      conn = get(conn, Routes.payment_intent_path(conn, :index))
       assert is_list(json_response(conn, 200)["data"])
     end
   end
 
-  describe "create charge" do
+  describe "create payment intent" do
     setup :create_token
 
-    test "renders charge when the customer and card are valid", %{
+    test "renders payment intent when the customer and card are valid", %{
       conn: conn,
       customer: customer,
       token: token
     } do
-      params = create_attrs() |> Map.merge(%{customer_id: customer.id, source: token.id})
+      params = create_attrs() |> Map.merge(%{customer_id: customer.id, payment_method: token.id})
 
-      conn = post(conn, Routes.charge_path(conn, :create), params)
+      conn = post(conn, Routes.payment_intent_path(conn, :create), params)
       assert %{"id" => id} = json_response(conn, 201)
 
-      conn = get(conn, Routes.charge_path(conn, :show, id))
+      conn = get(conn, Routes.payment_intent_path(conn, :show, id))
 
       assert %{
                "id" => id,
                "amount" => 5000,
-               "capture" => true,
                "currency" => "some currency",
                "customer" => _,
                "description" => "some description",
@@ -44,20 +43,19 @@ defmodule StripeMockWeb.ChargeControllerTest do
              } = json_response(conn, 200)
     end
 
-    test "renders charge when the token is valid and no customer is provided", %{
+    test "renders payment intent when the token is valid and no customer is provided", %{
       conn: conn,
       token: token
     } do
-      params = create_attrs() |> Map.merge(%{source: token.id})
-      conn = post(conn, Routes.charge_path(conn, :create), params)
+      params = create_attrs() |> Map.merge(%{payment_method: token.id})
+      conn = post(conn, Routes.payment_intent_path(conn, :create), params)
       assert %{"id" => id} = json_response(conn, 201)
 
-      conn = get(conn, Routes.charge_path(conn, :show, id))
+      conn = get(conn, Routes.payment_intent_path(conn, :show, id))
 
       assert %{
                "id" => id,
                "amount" => 5000,
-               "capture" => true,
                "currency" => "some currency",
                "customer" => nil,
                "description" => "some description",
@@ -68,19 +66,23 @@ defmodule StripeMockWeb.ChargeControllerTest do
     end
 
     test "renders errors when data is invalid", %{conn: conn} do
-      conn = post(conn, Routes.charge_path(conn, :create), invalid_attrs())
+      conn = post(conn, Routes.payment_intent_path(conn, :create), invalid_attrs())
       assert json_response(conn, 422)["errors"] != %{}
     end
   end
 
-  describe "update charge" do
-    setup [:create_charge]
+  describe "update payment intent" do
+    setup [:create_payment_intent]
 
-    test "renders charge when data is valid", %{conn: conn, charge: %Charge{id: id} = charge} do
-      conn = put(conn, Routes.charge_path(conn, :update, charge), update_attrs())
+    test "renders payment intent when data is valid", %{
+      conn: conn,
+      payment_intent: payment_intent
+    } do
+      %PaymentIntent{id: id} = payment_intent
+      conn = put(conn, Routes.payment_intent_path(conn, :update, payment_intent), update_attrs())
       assert %{"id" => ^id} = json_response(conn, 200)
 
-      conn = get(conn, Routes.charge_path(conn, :show, id))
+      conn = get(conn, Routes.payment_intent_path(conn, :show, id))
 
       assert %{
                "description" => "some updated description",
@@ -88,8 +90,10 @@ defmodule StripeMockWeb.ChargeControllerTest do
              } = json_response(conn, 200)
     end
 
-    test "renders errors when data is invalid", %{conn: conn, charge: charge} do
-      conn = patch(conn, Routes.charge_path(conn, :update, charge), invalid_attrs())
+    test "renders errors when data is invalid", %{conn: conn, payment_intent: payment_intent} do
+      conn =
+        patch(conn, Routes.payment_intent_path(conn, :update, payment_intent), invalid_attrs())
+
       assert json_response(conn, 422)["errors"] != %{}
     end
   end
@@ -121,7 +125,7 @@ defmodule StripeMockWeb.ChargeControllerTest do
       customer: nil,
       description: nil,
       metadata: nil,
-      source: nil,
+      payment_method: nil,
       statement_descriptor: nil,
       transfer_group: nil
     }

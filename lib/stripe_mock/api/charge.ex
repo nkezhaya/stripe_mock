@@ -5,17 +5,17 @@ defmodule StripeMock.API.Charge do
     field :amount, :integer
     field :capture, :boolean, default: false
     field :currency, :string
-    field :description, :string
-    field :metadata, :map, default: %{}
     field :statement_descriptor, :string
     field :transfer_group, :string
 
     field :source, :string, virtual: true
 
+    belongs_to :payment_intent, API.PaymentIntent
     belongs_to :customer, API.Customer
     belongs_to :card, API.Card
     belongs_to :token, API.Token
 
+    common_fields()
     timestamps()
   end
 
@@ -50,7 +50,9 @@ defmodule StripeMock.API.Charge do
   end
 
   @doc false
-  def capture_changeset(payment_intent, charge) do
+  def capture_changeset(charge, payment_intent) do
+    charge
+    |> change(%{payment_intent_id: payment_intent.id})
   end
 
   defp set_customer_and_source(changeset) do

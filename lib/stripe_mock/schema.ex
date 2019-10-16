@@ -13,12 +13,16 @@ defmodule StripeMock.Schema do
     end
   end
 
+  defmacro common_fields() do
+    quote do
+      field :description, :string
+      field :metadata, :map, default: %{}
+    end
+  end
+
   import Ecto.Changeset
 
   def put_common_fields(changeset) do
-    case get_field(changeset, :metadata) do
-      nil -> put_change(changeset, :metadata, %{})
-      _ -> changeset
-    end
+    validate_required(changeset, [:metadata])
   end
 end

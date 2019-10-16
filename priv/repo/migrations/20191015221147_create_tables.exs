@@ -4,7 +4,7 @@ defmodule StripeMock.Repo.Migrations.CreateTables do
   defmacro common_fields() do
     quote do
       add(:deleted, :boolean, null: false, default: false)
-      add(:description, :string)
+      add(:description, :string, null: true)
       add(:metadata, :map, null: false, default: %{})
       timestamps(inserted_at: :created, updated_at: false)
     end
@@ -46,8 +46,32 @@ defmodule StripeMock.Repo.Migrations.CreateTables do
     end
 
     create table(:sources) do
+      common_fields()
+    end
+
+    create table(:payment_methods) do
       add(:card_id, references(:cards))
       add(:token_id, references(:tokens))
+      add(:source_id, references(:sources))
+
+      common_fields()
+    end
+
+    create table(:payment_intents) do
+      add(:amount, :integer)
+      add(:capture_method, :string)
+      add(:confirmation_method, :string)
+      add(:currency, :string)
+      add(:payment_method_types, {:array, :string}, default: ["card"])
+      add(:statement_descriptor, :string)
+      add(:status, :string)
+      add(:transfer_data, :map)
+      add(:transfer_group, :string)
+
+      add(:customer_id, references(:customers))
+      add(:payment_method_id, references(:payment_methods))
+
+      common_fields()
     end
 
     create table(:charges) do
@@ -60,6 +84,7 @@ defmodule StripeMock.Repo.Migrations.CreateTables do
       add(:customer_id, references(:customers))
       add(:card_id, references(:cards))
       add(:token_id, references(:tokens))
+      add(:payment_intent_id, references(:payment_intents))
 
       common_fields()
     end
