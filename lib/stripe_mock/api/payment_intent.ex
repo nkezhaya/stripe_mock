@@ -51,10 +51,6 @@ defmodule StripeMock.API.PaymentIntent do
     |> put_common_fields()
   end
 
-  @doc false
-  def capture_changeset(payment_intent, charge) do
-  end
-
   defp set_payment_method(changeset) do
     case get_change(changeset, :payment_method_id) do
       nil ->

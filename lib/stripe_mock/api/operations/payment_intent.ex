@@ -1,10 +1,11 @@
 defmodule StripeMock.API.Operations.PaymentIntent do
   import Ecto.Query
 
+  alias Ecto.Multi
   alias StripeMock.Repo
   alias StripeMock.API.{Charge, PaymentIntent}
 
-  @preload [payment_method: [:card, :source, token: [:card]]]
+  @preload [:charges, payment_method: [:card, :source, token: [:card]]]
 
   def list_payment_intents() do
     PaymentIntent
@@ -35,20 +36,20 @@ defmodule StripeMock.API.Operations.PaymentIntent do
 
   def confirm_payment_intent(%PaymentIntent{} = payment_intent) do
     payment_intent
-    |> PaymentIntent.status_changeset("requires_capture")
+    |> PaymentIntent.status_changeset("requires_action")
     |> Repo.update()
     |> preload_payment_method()
   end
 
   def capture_payment_intent(%PaymentIntent{} = payment_intent) do
-    charge =
-      %Charge{}
-      |> Charge.capture_changeset(payment_intent)
-      |> Repo.insert!()
-
-    payment_intent
-    |> PaymentIntent.capture_changeset(charge)
-    |> Repo.update!()
+    Multi.new()
+    |> Multi.insert(:charge, Charge.capture_changeset(%Charge{}, payment_intent))
+    |> Multi.update(:payment_intent, PaymentIntent.status_changeset(payment_intent, "succeeded"))
+    |> Repo.transaction()
+    |> case do
+      {:ok, %{payment_intent: payment_intent}} -> {:ok, payment_intent}
+      {:error, _, value, _} -> {:error, value}
+    end
     |> preload_payment_method()
   end
 
