@@ -1,16 +1,16 @@
 defmodule StripeMock.API.Customer do
   use StripeMock.Schema
 
-  @primary_key {:id, :binary_id, autogenerate: false}
   schema "customers" do
-    field :created, :integer
     field :currency, :string, default: "usd"
     field :deleted, :boolean, default: false
     field :description, :string
     field :email, :string
-    field :metadata, StripeMock.Type.Metadata, default: %{}
+    field :metadata, :map, default: %{}
     field :name, :string
     field :phone, :string
+
+    timestamps()
   end
 
   @doc false

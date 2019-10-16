@@ -1,26 +1,38 @@
 defmodule StripeMock.API.Operations.Card do
+  import Ecto.Query
+  alias Ecto.Multi
   alias StripeMock.Repo
-  alias StripeMock.API.Card
+  alias StripeMock.API.{Card, Source}
 
   def list_cards(customer) do
     Card
+    |> where([c], not c.deleted)
+    |> where([c], c.customer_id == ^customer.id)
     |> Repo.all()
-    |> Enum.filter(&(&1.customer_id == customer.id))
   end
 
   def get_card(id), do: Repo.fetch(Card, id)
   def get_card!(id), do: Repo.get!(Card, id)
 
   def create_card(customer, attrs) do
-    %Card{customer_id: customer.id}
-    |> Card.create_changeset(attrs)
-    |> Repo.insert()
+    Multi.new()
+    |> Multi.insert(:card, Card.create_changeset(%Card{customer_id: customer.id}, attrs))
+    |> Multi.run(:source, fn _repo, %{card: card} ->
+      %Source{}
+      |> Source.changeset(%{card_id: card.id})
+      |> Repo.insert()
+    end)
+    |> Repo.transaction()
+    |> case do
+      {:ok, %{card: card}} -> {:ok, card}
+      {:error, _, value, _} -> {:error, value}
+    end
   end
 
   def create_customer_card_from_source(customer, source, metadata) do
     result =
       source.card
-      |> Ecto.Changeset.change(%{customer_id: customer.id, metadata: metadata})
+      |> Ecto.Changeset.change(%{customer_id: customer.id, metadata: metadata || %{}})
       |> Repo.update()
 
     source

@@ -36,7 +36,7 @@ defmodule StripeMockWeb.ChargeControllerTest do
                "amount" => 5000,
                "capture" => true,
                "currency" => "some currency",
-               "customer" => "cus_" <> _,
+               "customer" => _,
                "description" => "some description",
                "metadata" => %{},
                "statement_descriptor" => "some statement_descriptor",
@@ -86,11 +86,6 @@ defmodule StripeMockWeb.ChargeControllerTest do
                "description" => "some updated description",
                "metadata" => %{"key" => "val"}
              } = json_response(conn, 200)
-    end
-
-    test "renders errors when data is invalid", %{conn: conn, charge: charge} do
-      conn = put(conn, Routes.charge_path(conn, :update, charge), invalid_attrs())
-      assert json_response(conn, 422)["errors"] != %{}
     end
   end
 

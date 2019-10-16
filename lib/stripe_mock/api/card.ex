@@ -3,9 +3,8 @@ defmodule StripeMock.API.Card do
 
   schema "cards" do
     field :brand, :string
-    field :created, :integer
     field :deleted, :boolean
-    field :metadata, StripeMock.Type.Metadata, default: %{}
+    field :metadata, :map, default: %{}
     field :last4, :string
     field :source, :string
 
@@ -15,6 +14,8 @@ defmodule StripeMock.API.Card do
     field :cvc, :string
 
     belongs_to :customer, API.Customer
+
+    timestamps()
   end
 
   @doc false
