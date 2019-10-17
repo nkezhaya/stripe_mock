@@ -4,6 +4,7 @@ defmodule StripeMockWeb.Router do
   pipeline :api do
     plug :accepts, ["json"]
     plug StripeMockWeb.Plug.Auth
+    plug StripeMockWeb.Plug.EnsureMigratorFinished
   end
 
   scope "/v1", StripeMockWeb do

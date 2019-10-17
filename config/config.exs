@@ -24,20 +24,6 @@ config :logger, :console,
 # Use Jason for JSON parsing in Phoenix
 config :phoenix, :json_library, Jason
 
-{uri, _} = System.cmd("pg_tmp", ["-t"])
-
-[username, host, port, database] =
-  Regex.scan(~r/(\w+)@([\w\d\.]+)\:(\d+)\/(\w+)/i, uri, capture: :all_but_first) |> List.flatten()
-
-config :stripe_mock, StripeMock.Repo,
-  username: username,
-  password: "",
-  database: database,
-  hostname: host,
-  port: port,
-  pool_size: 2,
-  migration_primary_key: [name: :id, type: :binary_id]
-
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
 import_config "#{Mix.env()}.exs"

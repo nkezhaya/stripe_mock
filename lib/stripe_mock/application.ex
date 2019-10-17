@@ -6,7 +6,8 @@ defmodule StripeMock.Application do
   def start(_type, _args) do
     children = [
       StripeMockWeb.Endpoint,
-      StripeMock.Repo
+      StripeMock.Repo,
+      StripeMock.Migrator
     ]
 
     opts = [strategy: :one_for_one, name: StripeMock.Supervisor]
