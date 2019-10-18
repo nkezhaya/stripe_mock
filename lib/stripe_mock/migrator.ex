@@ -32,23 +32,13 @@ defmodule StripeMock.Migrator do
   @repos [StripeMock.Repo]
 
   def migrate(_argv \\ nil) do
-    # Start apps necessary for executing migrations
-    IO.puts("Starting dependencies")
     Enum.each(@start_apps, &Application.ensure_all_started/1)
-
     Application.load(:stripe_mock)
-
-    # Run migrations
     Enum.each(@repos, &run_migrations_for/1)
-
-    # Done
-    IO.puts("Success!")
   end
 
   defp run_migrations_for(repo) do
-    app = Keyword.get(repo.config, :otp_app)
     migrations_path = priv_path_for(repo, "migrations")
-    IO.puts("Running migrations for #{app}, from #{migrations_path}")
     Ecto.Migrator.run(repo, migrations_path, :up, all: true)
   end
 

@@ -1,31 +1,10 @@
 defmodule StripeMock.Repo do
   use Ecto.Repo, otp_app: :stripe_mock, adapter: Ecto.Adapters.Postgres
   import Ecto.Changeset
-  alias StripeMock.API
-
-  @impl true
-  def init(:supervisor, config) do
-    {uri, _} = System.cmd("pg_tmp", ["-t"])
-
-    [[username, host, port, database]] =
-      Regex.scan(~r/(\w+)@([\w\d\.]+)\:(\d+)\/(\w+)/i, uri, capture: :all_but_first)
-
-    config =
-      Keyword.merge(config,
-        username: username,
-        password: "",
-        database: database,
-        hostname: host,
-        port: port,
-        pool_size: 2,
-        migration_primary_key: [name: :id, type: :binary_id]
-      )
-
-    {:ok, config}
-  end
+  alias StripeMock.Database
 
   def init(_type, config) do
-    {:ok, config}
+    {:ok, Keyword.merge(config, Database.ecto_config())}
   end
 
   def fetch(schema, id) do

@@ -10,7 +10,6 @@ defmodule StripeMock.MixProject do
       compilers: [:phoenix, :gettext] ++ Mix.compilers(),
       start_permanent: false,
       description: description(),
-      aliases: aliases(),
       package: package(),
       deps: deps()
     ]
@@ -61,9 +60,5 @@ defmodule StripeMock.MixProject do
       {:ecto_sql, "~> 3.2"},
       {:ex_doc, ">= 0.0.0", only: :dev}
     ]
-  end
-
-  defp aliases do
-    [test: ["ecto.migrate", "test"]]
   end
 end
