@@ -93,17 +93,19 @@ defmodule StripeMockWeb.PaymentIntentControllerTest do
 
       assert json_response(conn, 422)["errors"] != %{}
     end
+  end
+
+  describe "manual update" do
+    setup [:create_manual_payment_intent]
 
     test "confirms payment intent", %{conn: conn, payment_intent: payment_intent} do
       conn = post(conn, Routes.payment_intent_path(conn, :confirm, payment_intent), %{})
-
-      assert %{"status" => "requires_action"} = json_response(conn, 200)
+      assert %{"status" => "requires_capture"} = json_response(conn, 200)
     end
 
     test "captures payment intent", %{conn: conn, payment_intent: payment_intent} do
-      conn
-      |> post(Routes.payment_intent_path(conn, :confirm, payment_intent), %{})
-      |> json_response(:ok)
+      conn = post(conn, Routes.payment_intent_path(conn, :confirm, payment_intent), %{})
+      assert %{"status" => "requires_capture"} = json_response(conn, 200)
 
       conn = post(conn, Routes.payment_intent_path(conn, :capture, payment_intent), %{})
 

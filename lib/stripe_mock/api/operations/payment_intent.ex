@@ -24,6 +24,23 @@ defmodule StripeMock.API.Operations.PaymentIntent do
     %PaymentIntent{}
     |> PaymentIntent.changeset(attrs)
     |> Repo.insert()
+    |> case do
+      {:ok, payment_intent} = result ->
+        if payment_intent.confirmation_method == "automatic" do
+          {:ok, payment_intent} = confirm_payment_intent(payment_intent)
+
+          if payment_intent.capture_method == "automatic" do
+            {:ok, _payment_intent} = capture_payment_intent(payment_intent)
+          end
+
+          get_payment_intent(payment_intent.id)
+        else
+          result
+        end
+
+      error ->
+        error
+    end
     |> do_preloads()
   end
 
@@ -37,10 +54,7 @@ defmodule StripeMock.API.Operations.PaymentIntent do
   def confirm_payment_intent(%PaymentIntent{} = payment_intent) do
     Multi.new()
     |> Multi.insert(:charge, Charge.capture_changeset(%Charge{}, payment_intent))
-    |> Multi.update(
-      :payment_intent,
-      PaymentIntent.status_changeset(payment_intent, "requires_action")
-    )
+    |> Multi.update(:payment_intent, PaymentIntent.confirm_changeset(payment_intent))
     |> Repo.transaction()
     |> case do
       {:ok, %{payment_intent: payment_intent}} -> {:ok, payment_intent}
@@ -54,7 +68,7 @@ defmodule StripeMock.API.Operations.PaymentIntent do
 
     Multi.new()
     |> Multi.update_all(:charge, query, set: [captured: true])
-    |> Multi.update(:payment_intent, PaymentIntent.status_changeset(payment_intent, "succeeded"))
+    |> Multi.update(:payment_intent, PaymentIntent.capture_changeset(payment_intent))
     |> Repo.transaction()
     |> case do
       {:ok, %{payment_intent: payment_intent}} -> {:ok, payment_intent}

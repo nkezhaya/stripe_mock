@@ -9,7 +9,7 @@ defmodule StripeMock.API.PaymentIntent do
     field :currency, :string
     field :payment_method_types, {:array, :string}, default: ["card"]
     field :statement_descriptor, :string
-    field :status, :string
+    field :status, :string, default: "requires_confirmation"
     field :transfer_data, :map
     field :transfer_group, :string
 
@@ -37,18 +37,36 @@ defmodule StripeMock.API.PaymentIntent do
       :transfer_data,
       :transfer_group
     ])
-    |> validate_inclusion(:capture_method, ~w(automatic manual))
     |> validate_inclusion(:confirmation_method, ~w(automatic manual))
+    |> validate_inclusion(:capture_method, ~w(automatic manual))
     |> set_payment_method()
     |> validate_required([:payment_method_id])
     |> put_common_fields()
   end
 
   @doc false
-  def status_changeset(payment_intent, status) do
+  def confirm_changeset(payment_intent) do
     payment_intent
-    |> change(%{status: status})
+    |> change()
+    |> ensure_status("requires_confirmation")
+    |> put_change(:status, "requires_capture")
     |> put_common_fields()
+  end
+
+  @doc false
+  def capture_changeset(payment_intent) do
+    payment_intent
+    |> change()
+    |> ensure_status("requires_capture")
+    |> put_change(:status, "succeeded")
+    |> put_common_fields()
+  end
+
+  defp ensure_status(changeset, status) do
+    case get_field(changeset, :status) do
+      ^status -> changeset
+      s -> add_error(changeset, :status, "should be '#{status}', is '#{s}'")
+    end
   end
 
   defp set_payment_method(changeset) do

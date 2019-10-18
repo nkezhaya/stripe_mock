@@ -49,7 +49,7 @@ defmodule StripeMock.TestHelper do
     [payment_intent: create_payment_intent(customer)]
   end
 
-  def create_payment_intent(%API.Customer{} = customer) do
+  def create_payment_intent(%API.Customer{} = customer, manual? \\ false) do
     [token: token] = create_token()
 
     {:ok, charge} =
@@ -57,10 +57,16 @@ defmodule StripeMock.TestHelper do
         amount: 5000,
         currency: "some currency",
         customer_id: customer.id,
-        payment_method_id: token.id
+        payment_method_id: token.id,
+        confirmation_method: if(manual?, do: "manual", else: "automatic"),
+        capture_method: if(manual?, do: "manual", else: "automatic")
       })
 
     charge
+  end
+
+  def create_manual_payment_intent(%{customer: customer}) do
+    [payment_intent: create_payment_intent(customer, true)]
   end
 
   def create_refund(%{charge: charge}) do
