@@ -26,7 +26,8 @@ defmodule StripeMock.Database do
       database: database,
       hostname: host,
       port: port,
-      pool_size: 2
+      pool_size: 2,
+      migration_primary_key: [type: :string]
     ]
 
     {:ok, config}
