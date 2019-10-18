@@ -90,7 +90,7 @@ defmodule StripeMockWeb.SourceControllerTest do
         |> get(Routes.customer_source_path(conn, :index, card.customer_id, object: "card"))
         |> json_response(200)
 
-      assert Enum.find(data, &(&1["id"] == card.stripe_id))
+      assert Enum.find(data, &(&1["id"] == card.id))
 
       delete(conn, Routes.customer_source_path(conn, :delete, card.customer_id, card))
 
@@ -99,7 +99,7 @@ defmodule StripeMockWeb.SourceControllerTest do
         |> get(Routes.customer_source_path(conn, :index, card.customer_id, object: "card"))
         |> json_response(200)
 
-      refute Enum.find(data, &(&1["id"] == card.stripe_id))
+      refute Enum.find(data, &(&1["id"] == card.id))
     end
   end
 end

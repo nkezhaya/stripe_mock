@@ -3,7 +3,7 @@ defmodule StripeMock.Repo.Migrations.CreateTables do
 
   defmacro common_fields() do
     quote do
-      add(:stripe_id, :string, null: false)
+      add(:id, :string, null: false, primary_key: true)
       add(:deleted, :boolean, null: false, default: false)
       add(:description, :string, null: true)
       add(:metadata, :map, null: false, default: %{})
@@ -12,7 +12,7 @@ defmodule StripeMock.Repo.Migrations.CreateTables do
   end
 
   def change do
-    create table(:customers) do
+    create table(:customers, primary_key: false) do
       add(:currency, :string, default: "usd")
       add(:email, :string)
       add(:name, :string)
@@ -21,7 +21,7 @@ defmodule StripeMock.Repo.Migrations.CreateTables do
       common_fields()
     end
 
-    create table(:cards) do
+    create table(:cards, primary_key: false) do
       add(:brand, :string)
       add(:last4, :string)
       add(:source, :string)
@@ -36,7 +36,7 @@ defmodule StripeMock.Repo.Migrations.CreateTables do
       common_fields()
     end
 
-    create table(:tokens) do
+    create table(:tokens, primary_key: false) do
       add(:client_ip, :string)
       add(:type, :string)
       add(:used, :boolean, default: false)
@@ -46,11 +46,11 @@ defmodule StripeMock.Repo.Migrations.CreateTables do
       common_fields()
     end
 
-    create table(:sources) do
+    create table(:sources, primary_key: false) do
       common_fields()
     end
 
-    create table(:payment_methods) do
+    create table(:payment_methods, primary_key: false) do
       add(:card_id, references(:cards))
       add(:token_id, references(:tokens))
       add(:source_id, references(:sources))
@@ -58,7 +58,7 @@ defmodule StripeMock.Repo.Migrations.CreateTables do
       common_fields()
     end
 
-    create table(:payment_intents) do
+    create table(:payment_intents, primary_key: false) do
       add(:amount, :integer)
       add(:capture_method, :string)
       add(:confirmation_method, :string)
@@ -75,7 +75,7 @@ defmodule StripeMock.Repo.Migrations.CreateTables do
       common_fields()
     end
 
-    create table(:charges) do
+    create table(:charges, primary_key: false) do
       add(:amount, :integer)
       add(:capture, :boolean, default: false)
       add(:currency, :string)
@@ -90,7 +90,7 @@ defmodule StripeMock.Repo.Migrations.CreateTables do
       common_fields()
     end
 
-    create table(:refunds) do
+    create table(:refunds, primary_key: false) do
       add(:amount, :integer)
       add(:reason, :string)
 

@@ -8,7 +8,6 @@ defmodule StripeMockWeb.ViewHelpers do
     |> update_created()
     |> Map.delete(:__struct__)
     |> Map.delete(:__meta__)
-    |> Map.put(:id, struct.stripe_id)
   end
 
   defp update_created(%{created: %{} = timestamp} = struct) do

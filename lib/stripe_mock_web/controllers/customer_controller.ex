@@ -27,18 +27,16 @@ defmodule StripeMockWeb.CustomerController do
   end
 
   def update(conn, %{"id" => id} = customer_params) do
-    customer = API.get_customer!(id)
-
-    with {:ok, %Customer{} = customer} <- API.update_customer(customer, customer_params) do
+    with {:ok, customer} <- API.get_customer(id),
+         {:ok, customer} <- API.update_customer(customer, customer_params) do
       render(conn, "show.json", customer: customer)
     end
   end
 
   def delete(conn, %{"id" => id}) do
-    customer = API.get_customer!(id)
-
-    with {:ok, %Customer{}} <- API.delete_customer(customer) do
-      send_resp(conn, :no_content, "")
+    with {:ok, customer} <- API.get_customer(id),
+         {:ok, customer} <- API.delete_customer(customer) do
+      render(conn, "show.json", customer: customer)
     end
   end
 end

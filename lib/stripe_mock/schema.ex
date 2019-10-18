@@ -10,15 +10,14 @@ defmodule StripeMock.Schema do
       import unquote(__MODULE__)
       alias StripeMock.{API, Repo}
 
-      Module.put_attribute(__MODULE__, :primary_key, {:id, :binary_id, autogenerate: false})
-      Module.put_attribute(__MODULE__, :foreign_key_type, :binary_id)
+      Module.put_attribute(__MODULE__, :primary_key, {:id, :string, autogenerate: false})
+      Module.put_attribute(__MODULE__, :foreign_key_type, :string)
       Module.put_attribute(__MODULE__, :timestamps_opts, inserted_at: :created, updated_at: false)
     end
   end
 
   defmacro common_fields() do
     quote do
-      field :stripe_id, :string
       field :description, :string
       field :metadata, :map, default: %{}
     end
@@ -36,16 +35,16 @@ defmodule StripeMock.Schema do
 
   defp put_ids(changeset) do
     case get_field(changeset, :id) do
-      nil -> do_put_stripe_id(changeset)
+      nil -> do_put_id(changeset)
       _ -> changeset
     end
   end
 
-  defp do_put_stripe_id(changeset) do
+  defp do_put_id(changeset) do
     uuid = Ecto.UUID.generate()
     prefix = ID.prefix(changeset.data)
-    stripe_id = prefix <> "_" <> StripeMock.ID.from_uuid(uuid)
+    id = prefix <> "_" <> StripeMock.ID.from_uuid(uuid)
 
-    change(changeset, %{id: uuid, stripe_id: stripe_id})
+    change(changeset, %{id: id})
   end
 end

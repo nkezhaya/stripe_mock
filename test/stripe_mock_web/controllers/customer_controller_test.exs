@@ -80,7 +80,7 @@ defmodule StripeMockWeb.CustomerControllerTest do
       customer: %Customer{id: id} = customer
     } do
       conn = delete(conn, Routes.customer_path(conn, :delete, customer))
-      assert response(conn, 204)
+      assert %{"deleted" => true} = json_response(conn, :ok)
 
       assert %{"deleted" => true} =
                conn

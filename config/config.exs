@@ -15,7 +15,7 @@ config :stripe_mock, StripeMockWeb.Endpoint,
   render_errors: [view: StripeMockWeb.ErrorView, accepts: ~w(json)]
 
 config :stripe_mock, ecto_repos: [StripeMock.Repo]
-config :stripe_mock, StripeMock.Repo, migration_primary_key: [type: :binary_id]
+config :stripe_mock, StripeMock.Repo, migration_primary_key: [type: :string]
 
 # Configures Elixir's Logger
 config :logger, :console,

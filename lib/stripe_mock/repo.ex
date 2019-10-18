@@ -8,21 +8,9 @@ defmodule StripeMock.Repo do
   end
 
   def fetch(schema, id) do
-    if valid_uuid?(id) do
-      get(schema, id)
-    else
-      get_by(schema, stripe_id: id)
-    end
-    |> case do
+    case get(schema, id) do
       nil -> {:error, :not_found}
       object -> {:ok, object}
-    end
-  end
-
-  defp valid_uuid?(id) do
-    case Ecto.UUID.cast(id) do
-      {:ok, _} -> true
-      _ -> false
     end
   end
 
