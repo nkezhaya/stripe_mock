@@ -19,7 +19,8 @@ defmodule StripeMockWeb.ChargeView do
     |> Map.merge(%{
       customer: charge.customer_id,
       outcome: render_outcome(charge),
-      payment_method: render(StripeMockWeb.CardView, "card.json", card: charge.card)
+      payment_method:
+        if(charge.card, do: render(StripeMockWeb.CardView, "card.json", card: charge.card))
     })
   end
 

@@ -32,7 +32,6 @@ defmodule StripeMockWeb.ChargeControllerTest do
       assert %{
                "id" => "ch_" <> id,
                "amount" => 5000,
-               "capture" => true,
                "currency" => "some currency",
                "customer" => _,
                "description" => "some description",
@@ -55,7 +54,6 @@ defmodule StripeMockWeb.ChargeControllerTest do
       assert %{
                "id" => id,
                "amount" => 5000,
-               "capture" => true,
                "currency" => "some currency",
                "customer" => nil,
                "description" => "some description",

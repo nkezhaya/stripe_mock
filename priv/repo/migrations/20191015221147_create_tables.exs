@@ -77,7 +77,7 @@ defmodule StripeMock.Repo.Migrations.CreateTables do
 
     create table(:charges, primary_key: false) do
       add(:amount, :integer)
-      add(:capture, :boolean, default: false)
+      add(:captured, :boolean, default: false)
       add(:currency, :string)
       add(:statement_descriptor, :string)
       add(:transfer_group, :string)

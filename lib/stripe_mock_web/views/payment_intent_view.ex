@@ -18,7 +18,6 @@ defmodule StripeMockWeb.PaymentIntentView do
     )
     |> Map.put("customer", payment_intent.customer_id)
     |> Map.merge(%{
-      object: "payment_intent",
       payment_method: render_payment_method(payment_intent.payment_method),
       charges: render_page(conn, paginate(payment_intent.charges), ChargeView, "charge.json")
     })
