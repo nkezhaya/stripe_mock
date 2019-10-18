@@ -67,6 +67,10 @@ defmodule StripeMockWeb do
   When used, dispatch to the appropriate controller/view/etc.
   """
   defmacro __using__(which) when is_atom(which) do
+    quote do
+      Module.put_attribute(unquote(__MODULE__), :moduledoc, false)
+    end
+
     apply(__MODULE__, which, [])
   end
 end

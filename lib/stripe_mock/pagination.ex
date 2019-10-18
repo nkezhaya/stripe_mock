@@ -7,6 +7,8 @@ defmodule StripeMock.Pagination do
 
   defmacro __using__(_opts) do
     quote do
+      import unquote(__MODULE__)
+
       def render_page(conn, page, view, template) do
         %{
           object: "list",

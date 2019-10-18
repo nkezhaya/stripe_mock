@@ -1,16 +1,16 @@
 defmodule StripeMockWeb.PaymentIntentView do
   use StripeMockWeb, :view
-  alias StripeMockWeb.PaymentIntentView
+  alias StripeMockWeb.{ChargeView, PaymentIntentView}
 
-  def render("index.json", %{page: page}) do
-    %{data: render_many(page.data, PaymentIntentView, "payment_intent.json")}
+  def render("index.json", %{conn: conn, page: page}) do
+    %{data: render_many(page.data, PaymentIntentView, "payment_intent.json", conn: conn)}
   end
 
-  def render("show.json", %{payment_intent: payment_intent}) do
-    render_one(payment_intent, PaymentIntentView, "payment_intent.json")
+  def render("show.json", %{conn: conn, payment_intent: payment_intent}) do
+    render_one(payment_intent, PaymentIntentView, "payment_intent.json", conn: conn)
   end
 
-  def render("payment_intent.json", %{payment_intent: payment_intent}) do
+  def render("payment_intent.json", %{conn: conn, payment_intent: payment_intent}) do
     payment_intent
     |> as_map("payment_intent")
     |> Map.take(
@@ -19,7 +19,8 @@ defmodule StripeMockWeb.PaymentIntentView do
     |> Map.put("customer", payment_intent.customer_id)
     |> Map.merge(%{
       object: "payment_intent",
-      payment_method: render_payment_method(payment_intent.payment_method)
+      payment_method: render_payment_method(payment_intent.payment_method),
+      charges: render_page(conn, paginate(payment_intent.charges), ChargeView, "charge.json")
     })
   end
 
