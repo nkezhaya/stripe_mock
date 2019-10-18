@@ -2,8 +2,6 @@ defmodule StripeMockWeb.ChargeControllerTest do
   use StripeMockWeb.ConnCase
   @moduletag :charge
 
-  alias StripeMock.API.Charge
-
   setup :create_customer
   setup :create_card
 
@@ -32,7 +30,7 @@ defmodule StripeMockWeb.ChargeControllerTest do
       conn = get(conn, Routes.charge_path(conn, :show, id))
 
       assert %{
-               "id" => id,
+               "id" => "ch_" <> id,
                "amount" => 5000,
                "capture" => true,
                "currency" => "some currency",
@@ -76,9 +74,9 @@ defmodule StripeMockWeb.ChargeControllerTest do
   describe "update charge" do
     setup [:create_charge]
 
-    test "renders charge when data is valid", %{conn: conn, charge: %Charge{id: id} = charge} do
+    test "renders charge when data is valid", %{conn: conn, charge: charge} do
       conn = put(conn, Routes.charge_path(conn, :update, charge), update_attrs())
-      assert %{"id" => ^id} = json_response(conn, 200)
+      assert %{"id" => "ch_" <> _ = id} = json_response(conn, 200)
 
       conn = get(conn, Routes.charge_path(conn, :show, id))
 

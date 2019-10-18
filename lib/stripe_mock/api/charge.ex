@@ -53,6 +53,7 @@ defmodule StripeMock.API.Charge do
   def capture_changeset(charge, payment_intent) do
     charge
     |> change(%{payment_intent_id: payment_intent.id})
+    |> put_common_fields()
   end
 
   defp set_customer_and_source(changeset) do

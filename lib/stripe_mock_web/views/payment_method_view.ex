@@ -15,8 +15,8 @@ defmodule StripeMockWeb.PaymentMethodView do
     payment_object = render(StripeMockWeb.CardView, "card.json", card: card)
 
     payment_method
-    |> Map.take(~w(id created description metadata)a)
-    |> as_map()
+    |> as_map("payment_method")
+    |> Map.take(~w(id object created description metadata)a)
     |> Map.put(:card, payment_object)
   end
 

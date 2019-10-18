@@ -11,21 +11,16 @@ defmodule StripeMockWeb.TokenView do
   end
 
   def render("token.json", %{token: token}) do
-    object = %{
-      id: token.id,
-      object: "token",
-      client_ip: token.client_ip,
-      created: token.created,
-      type: token.type,
-      used: token.used
-    }
+    token
+    |> as_map("token")
+    |> Map.take(~w(id object card client_ip created type used)a)
+    |> case do
+      %{card: %API.Card{}} = token ->
+        card = render(CardView, "card.json", card: token.card)
+        %{token | card: card}
 
-    if token.card do
-      card = render(CardView, "card.json", card: token.card)
-      Map.put(object, :card, card)
-    else
-      object
+      token ->
+        token
     end
-    |> as_map()
   end
 end

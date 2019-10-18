@@ -12,7 +12,8 @@ defmodule StripeMockWeb.RefundView do
 
   def render("refund.json", %{refund: refund}) do
     refund
-    |> Map.take(~w(id created amount metadata reason)a)
+    |> as_map("refund")
+    |> Map.take(~w(id object created amount metadata reason)a)
     |> Map.put(:charge, refund.charge_id)
   end
 end

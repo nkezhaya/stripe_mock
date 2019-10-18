@@ -2,7 +2,6 @@ defmodule StripeMockWeb.SourceControllerTest do
   use StripeMockWeb.ConnCase
   @moduletag :source
 
-  alias StripeMock.API.Card
   alias StripeMock.CardFixture
 
   @card_attrs CardFixture.valid_card()
@@ -56,13 +55,13 @@ defmodule StripeMockWeb.SourceControllerTest do
   describe "update card" do
     setup [:create_card]
 
-    test "renders card when data is valid", %{conn: conn, card: %Card{id: id} = card} do
+    test "renders card when data is valid", %{conn: conn, card: card} do
       conn =
         put(conn, Routes.customer_source_path(conn, :update, card.customer_id, card),
           card: @update_attrs
         )
 
-      assert %{"id" => ^id, "object" => "card"} = json_response(conn, 200)
+      assert %{"id" => "card_" <> _ = id, "object" => "card"} = json_response(conn, 200)
 
       conn = get(conn, Routes.customer_source_path(conn, :show, card.customer_id, card))
 
@@ -91,7 +90,7 @@ defmodule StripeMockWeb.SourceControllerTest do
         |> get(Routes.customer_source_path(conn, :index, card.customer_id, object: "card"))
         |> json_response(200)
 
-      assert Enum.find(data, &(&1["id"] == card.id))
+      assert Enum.find(data, &(&1["id"] == card.stripe_id))
 
       delete(conn, Routes.customer_source_path(conn, :delete, card.customer_id, card))
 
@@ -100,7 +99,7 @@ defmodule StripeMockWeb.SourceControllerTest do
         |> get(Routes.customer_source_path(conn, :index, card.customer_id, object: "card"))
         |> json_response(200)
 
-      refute Enum.find(data, &(&1["id"] == card.id))
+      refute Enum.find(data, &(&1["id"] == card.stripe_id))
     end
   end
 end

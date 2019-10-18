@@ -4,7 +4,7 @@ defmodule StripeMock.Repo do
   alias StripeMock.API
 
   @impl true
-  def init(_type, config) do
+  def init(:supervisor, config) do
     {uri, _} = System.cmd("pg_tmp", ["-t"])
 
     [[username, host, port, database]] =
@@ -24,16 +24,23 @@ defmodule StripeMock.Repo do
     {:ok, config}
   end
 
+  def init(_type, config) do
+    {:ok, config}
+  end
+
   def fetch(schema, id) do
-    with true <- valid_id?(id),
-         %{} = object <- get(schema, id) do
-      {:ok, object}
+    if valid_uuid?(id) do
+      get(schema, id)
     else
-      _ -> {:error, :not_found}
+      get_by(schema, stripe_id: id)
+    end
+    |> case do
+      nil -> {:error, :not_found}
+      object -> {:ok, object}
     end
   end
 
-  defp valid_id?(id) do
+  defp valid_uuid?(id) do
     case Ecto.UUID.cast(id) do
       {:ok, _} -> true
       _ -> false
@@ -61,23 +68,4 @@ defmodule StripeMock.Repo do
       changeset
     end
   end
-
-  defp generate_id(schema) do
-    prefix(schema) <> "_" <> StripeMock.ID.generate()
-  end
-
-  def type(%{} = map), do: type(map.__struct__)
-  def type(API.Card), do: :card
-  def type(API.Charge), do: :charge
-  def type(API.Customer), do: :customer
-  def type(API.PaymentIntent), do: :payment_intent
-  def type(API.Refund), do: :refund
-  def type(API.Token), do: :token
-
-  def prefix(%API.Card{}), do: "card"
-  def prefix(%API.Charge{}), do: "ch"
-  def prefix(%API.Customer{}), do: "cus"
-  def prefix(%API.PaymentIntent{}), do: "pi"
-  def prefix(%API.Refund{}), do: "re"
-  def prefix(%API.Token{}), do: "tok"
 end

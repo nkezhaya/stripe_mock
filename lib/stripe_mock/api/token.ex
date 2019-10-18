@@ -8,6 +8,7 @@ defmodule StripeMock.API.Token do
 
     belongs_to :card, API.Card
 
+    common_fields()
     timestamps()
   end
 
@@ -18,6 +19,7 @@ defmodule StripeMock.API.Token do
     |> cast_assoc(:card, with: &API.Card.token_changeset/2)
     |> set_type()
     |> validate_required([:type])
+    |> put_common_fields()
   end
 
   defp set_type(changeset) do

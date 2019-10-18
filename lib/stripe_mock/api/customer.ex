@@ -4,12 +4,11 @@ defmodule StripeMock.API.Customer do
   schema "customers" do
     field :currency, :string, default: "usd"
     field :deleted, :boolean, default: false
-    field :description, :string
     field :email, :string
-    field :metadata, :map, default: %{}
     field :name, :string
     field :phone, :string
 
+    common_fields()
     timestamps()
   end
 
@@ -18,6 +17,7 @@ defmodule StripeMock.API.Customer do
     customer
     |> cast(attrs, [:created, :currency, :description, :email, :name, :phone])
     |> validate_email()
+    |> put_common_fields()
   end
 
   defp validate_email(changeset) do

@@ -12,10 +12,9 @@ defmodule StripeMockWeb.CardView do
 
   def render("card.json", %{card: card}) do
     card
-    |> Map.take(~w(id created deleted exp_month exp_year metadata last4 brand)a)
-    |> Map.put("object", "card")
+    |> as_map("card")
+    |> Map.take(~w(id object created deleted exp_month exp_year metadata last4 brand)a)
     |> Map.put("customer", card.customer_id)
-    |> as_map()
   end
 
   def render("delete.json", %{card: card}) do

@@ -29,7 +29,7 @@ defmodule StripeMockWeb.CustomerControllerTest do
 
     test "renders customer data", %{conn: conn, customer: customer} do
       conn = get(conn, Routes.customer_path(conn, :show, customer.id))
-      assert %{"id" => id} = json_response(conn, 200)
+      assert %{"id" => "cus_" <> id} = json_response(conn, 200)
     end
 
     test "renders 404 on not found", %{conn: conn} do
@@ -45,7 +45,7 @@ defmodule StripeMockWeb.CustomerControllerTest do
 
       conn = get(conn, Routes.customer_path(conn, :show, id))
 
-      assert %{"id" => id} = json_response(conn, 200)
+      assert %{"id" => "cus_" <> id} = json_response(conn, 200)
     end
 
     test "renders errors when data is invalid", %{conn: conn} do
@@ -57,16 +57,13 @@ defmodule StripeMockWeb.CustomerControllerTest do
   describe "update customer" do
     setup [:create_customer]
 
-    test "renders customer when data is valid", %{
-      conn: conn,
-      customer: %Customer{id: id} = customer
-    } do
+    test "renders customer when data is valid", %{conn: conn, customer: customer} do
       conn = put(conn, Routes.customer_path(conn, :update, customer), @update_attrs)
-      assert %{"id" => ^id} = json_response(conn, 200)
+      assert %{"id" => "cus_" <> _ = id} = json_response(conn, 200)
 
       conn = get(conn, Routes.customer_path(conn, :show, id))
 
-      assert %{"id" => id} = json_response(conn, 200)
+      assert %{"id" => "cus_" <> _} = json_response(conn, 200)
     end
 
     test "renders errors when data is invalid", %{conn: conn, customer: customer} do

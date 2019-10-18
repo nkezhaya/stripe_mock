@@ -36,12 +36,7 @@ defmodule StripeMock.Migrator do
     IO.puts("Starting dependencies")
     Enum.each(@start_apps, &Application.ensure_all_started/1)
 
-    Application.load(:basic_space)
-
-    # Start the Repo(s) for app
-    # Switch pool_size to 2 for ecto > 3.0
-    IO.puts("Starting repos")
-    Enum.each(@repos, & &1.start_link(pool_size: 2))
+    Application.load(:stripe_mock)
 
     # Run migrations
     Enum.each(@repos, &run_migrations_for/1)

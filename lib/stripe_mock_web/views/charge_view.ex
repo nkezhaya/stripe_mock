@@ -11,21 +11,16 @@ defmodule StripeMockWeb.ChargeView do
   end
 
   def render("charge.json", %{charge: charge}) do
-    %{
-      id: charge.id,
-      amount: charge.amount,
-      currency: charge.currency,
-      capture: charge.capture,
+    charge
+    |> as_map("charge")
+    |> Map.take(
+      ~w(id object amount currency capture description metadata statement_descriptor transfer_group)a
+    )
+    |> Map.merge(%{
       customer: charge.customer_id,
-      description: charge.description,
-      metadata: charge.metadata,
-      object: "charge",
       outcome: render_outcome(charge),
-      payment_method: render(StripeMockWeb.CardView, "card.json", card: charge.card),
-      statement_descriptor: charge.statement_descriptor,
-      transfer_group: charge.transfer_group
-    }
-    |> as_map()
+      payment_method: render(StripeMockWeb.CardView, "card.json", card: charge.card)
+    })
   end
 
   defp render_outcome(_charge) do

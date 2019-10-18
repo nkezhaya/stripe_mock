@@ -4,11 +4,11 @@ defmodule StripeMock.API.Refund do
 
   schema "refunds" do
     field :amount, :integer
-    field :metadata, :map, default: %{}
     field :reason, :string
 
     belongs_to :charge, API.Charge
 
+    common_fields()
     timestamps()
   end
 
@@ -21,6 +21,7 @@ defmodule StripeMock.API.Refund do
     |> validate_required(:amount)
     |> validate_amount()
     |> validate_reason()
+    |> put_common_fields()
   end
 
   @doc false

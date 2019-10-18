@@ -2,8 +2,6 @@ defmodule StripeMockWeb.RefundControllerTest do
   use StripeMockWeb.ConnCase
   @moduletag :refund
 
-  alias StripeMock.API.Refund
-
   setup :create_customer
   setup :create_charge
 
@@ -71,11 +69,11 @@ defmodule StripeMockWeb.RefundControllerTest do
   describe "update refund" do
     setup [:create_refund]
 
-    test "renders refund when data is valid", %{conn: conn, refund: %Refund{id: id} = refund} do
+    test "renders refund when data is valid", %{conn: conn, refund: refund} do
       assert refund.metadata == %{}
 
       conn = put(conn, Routes.refund_path(conn, :update, refund), %{metadata: %{"key" => "val"}})
-      assert %{"id" => ^id} = json_response(conn, 200)
+      assert %{"id" => "re_" <> _ = id} = json_response(conn, 200)
 
       conn = get(conn, Routes.refund_path(conn, :show, id))
 

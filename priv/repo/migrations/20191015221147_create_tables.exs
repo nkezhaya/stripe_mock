@@ -3,6 +3,7 @@ defmodule StripeMock.Repo.Migrations.CreateTables do
 
   defmacro common_fields() do
     quote do
+      add(:stripe_id, :string, null: false)
       add(:deleted, :boolean, null: false, default: false)
       add(:description, :string, null: true)
       add(:metadata, :map, null: false, default: %{})

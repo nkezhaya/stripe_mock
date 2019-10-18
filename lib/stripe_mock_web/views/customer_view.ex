@@ -15,7 +15,7 @@ defmodule StripeMockWeb.CustomerView do
     sources = API.list_cards(customer) |> Pagination.paginate()
 
     customer
-    |> as_map()
+    |> as_map("customer")
     |> Map.put(:sources, render_page(conn, sources, CardView, "card.json"))
   end
 end

@@ -2,8 +2,6 @@ defmodule StripeMockWeb.PaymentIntentControllerTest do
   use StripeMockWeb.ConnCase
   @moduletag :payment_intent
 
-  alias StripeMock.API.PaymentIntent
-
   setup :create_customer
   setup :create_card
 
@@ -78,9 +76,8 @@ defmodule StripeMockWeb.PaymentIntentControllerTest do
       conn: conn,
       payment_intent: payment_intent
     } do
-      %PaymentIntent{id: id} = payment_intent
       conn = put(conn, Routes.payment_intent_path(conn, :update, payment_intent), update_attrs())
-      assert %{"id" => ^id} = json_response(conn, 200)
+      assert %{"id" => "pi_" <> _ = id} = json_response(conn, 200)
 
       conn = get(conn, Routes.payment_intent_path(conn, :show, id))
 

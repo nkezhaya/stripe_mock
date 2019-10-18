@@ -4,7 +4,6 @@ defmodule StripeMock.API.Card do
   schema "cards" do
     field :brand, :string
     field :deleted, :boolean
-    field :metadata, :map, default: %{}
     field :last4, :string
     field :source, :string
 
@@ -15,6 +14,7 @@ defmodule StripeMock.API.Card do
 
     belongs_to :customer, API.Customer
 
+    common_fields()
     timestamps()
   end
 
@@ -23,6 +23,7 @@ defmodule StripeMock.API.Card do
     card
     |> cast(attrs, [:source, :metadata])
     |> validate_required([:source, :metadata])
+    |> put_common_fields()
   end
 
   @doc false
@@ -39,6 +40,7 @@ defmodule StripeMock.API.Card do
     |> validate_required([:number, :exp_month, :exp_year, :cvc])
     |> set_brand()
     |> set_last4()
+    |> put_common_fields()
   end
 
   defp set_brand(changeset) do

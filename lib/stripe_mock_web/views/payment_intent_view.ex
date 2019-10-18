@@ -12,9 +12,9 @@ defmodule StripeMockWeb.PaymentIntentView do
 
   def render("payment_intent.json", %{payment_intent: payment_intent}) do
     payment_intent
-    |> as_map()
+    |> as_map("payment_intent")
     |> Map.take(
-      ~w(amount capture_method confirmation_method currency description id metadata payment_method_types statement_descriptor status transfer_group)a
+      ~w(id object amount capture_method confirmation_method currency description metadata payment_method_types statement_descriptor status transfer_group)a
     )
     |> Map.put("customer", payment_intent.customer_id)
     |> Map.merge(%{

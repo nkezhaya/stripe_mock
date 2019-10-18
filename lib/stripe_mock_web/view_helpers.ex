@@ -1,9 +1,14 @@
 defmodule StripeMockWeb.ViewHelpers do
-  def as_map(struct) do
-    struct
+  def as_map(struct, object \\ nil) do
+    if is_bitstring(object) do
+      Map.put(struct, :object, object)
+    else
+      struct
+    end
     |> update_created()
     |> Map.delete(:__struct__)
     |> Map.delete(:__meta__)
+    |> Map.put(:id, struct.stripe_id)
   end
 
   defp update_created(%{created: %{} = timestamp} = struct) do
