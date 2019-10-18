@@ -26,6 +26,7 @@ defmodule StripeMock.API.PaymentIntent do
     payment_intent
     |> cast(attrs, [
       :amount,
+      :capture_method,
       :confirm,
       :confirmation_method,
       :currency,

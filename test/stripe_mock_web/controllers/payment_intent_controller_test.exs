@@ -32,6 +32,8 @@ defmodule StripeMockWeb.PaymentIntentControllerTest do
       assert %{
                "id" => id,
                "amount" => 5000,
+               "capture_method" => "manual",
+               "confirmation_method" => "manual",
                "currency" => "some currency",
                "customer" => _,
                "description" => "some description",
@@ -119,7 +121,8 @@ defmodule StripeMockWeb.PaymentIntentControllerTest do
   def create_attrs() do
     %{
       amount: 5000,
-      capture: true,
+      capture_method: "manual",
+      confirmation_method: "manual",
       currency: "some currency",
       description: "some description",
       metadata: %{},
