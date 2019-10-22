@@ -18,7 +18,7 @@ defmodule StripeMock.API.Token do
     |> cast(attrs, [:client_ip, :type])
     |> cast_assoc(:card, with: &API.Card.token_changeset/2)
     |> set_type()
-    |> validate_required([:type])
+    |> validate_required([:client_ip, :type])
     |> put_common_fields()
   end
 

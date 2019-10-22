@@ -6,8 +6,12 @@ defmodule StripeMockWeb.Plug.SetClientIP do
   def init(options), do: options
 
   def call(%{params: params} = conn, _arg) do
-    [a, b, c, d | _] = Tuple.to_list(conn.remote_ip)
-    params = Map.put(params, "client_ip", "#{a}.#{b}.#{c}.#{d}")
+    params = Map.put(params, "client_ip", get_ip(conn))
     %{conn | params: params}
+  end
+
+  defp get_ip(conn) do
+    [a, b, c, d | _] = Tuple.to_list(conn.remote_ip)
+    "#{a}.#{b}.#{c}.#{d}"
   end
 end
