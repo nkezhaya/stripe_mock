@@ -15,7 +15,7 @@ defmodule StripeMock.Database do
 
   @impl true
   def init(_) do
-    {uri, _} = System.cmd("pg_tmp", ["-t"])
+    {uri, _} = System.cmd("pg_tmp", ["-t", "-w", "180"])
 
     [[username, host, port, database]] =
       Regex.scan(~r/(\w+)@([\w\d\.]+)\:(\d+)\/(\w+)/i, uri, capture: :all_but_first)
