@@ -45,6 +45,11 @@ defmodule StripeMockWeb.RefundControllerTest do
                "charge" => ^charge_id,
                "metadata" => %{}
              } = json_response(conn, 200)
+
+      # Ensure charge.amount_refunded is updated
+
+      conn = get(conn, Routes.charge_path(conn, :show, charge.id))
+      assert %{"amount" => ^amount, "amount_refunded" => ^amount} = json_response(conn, 200)
     end
 
     test "refunds limited to charge amount", %{conn: conn, charge: charge} do

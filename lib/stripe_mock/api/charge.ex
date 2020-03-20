@@ -3,6 +3,7 @@ defmodule StripeMock.API.Charge do
 
   schema "charges" do
     field :amount, :integer
+    field :amount_refunded, :integer, default: 0
     field :capture, :boolean, virtual: true, default: false
     field :captured, :boolean, default: false
     field :currency, :string

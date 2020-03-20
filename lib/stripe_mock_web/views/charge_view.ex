@@ -14,7 +14,7 @@ defmodule StripeMockWeb.ChargeView do
     charge
     |> as_map("charge")
     |> Map.take(
-      ~w(id object amount currency capture description metadata statement_descriptor transfer_group)a
+      ~w(id object amount amount_refunded currency capture description metadata statement_descriptor transfer_group)a
     )
     |> Map.merge(%{
       customer: charge.customer_id,

@@ -21,6 +21,7 @@ defmodule StripeMock.API.Refund do
     |> validate_required(:amount)
     |> validate_amount()
     |> validate_reason()
+    |> update_charge()
     |> put_common_fields()
   end
 
@@ -74,5 +75,18 @@ defmodule StripeMock.API.Refund do
     else
       _ -> nil
     end
+  end
+
+  defp update_charge(changeset) do
+    prepare_changes(changeset, fn prepared_changeset ->
+      if charge_id = get_field(prepared_changeset, :charge_id) do
+        amount = get_field(prepared_changeset, :amount)
+
+        from(c in API.Charge, where: c.id == ^charge_id)
+        |> prepared_changeset.repo.update_all([inc: [amount_refunded: amount]], [])
+      end
+
+      prepared_changeset
+    end)
   end
 end
