@@ -5,8 +5,13 @@ defmodule StripeMock.Database do
 
   use GenServer
 
-  def start_link(arg) do
-    GenServer.start_link(__MODULE__, arg, name: __MODULE__)
+  def start_link(_) do
+    GenServer.start_link(__MODULE__, enabled?(), name: __MODULE__)
+  end
+
+  def enabled?() do
+    Application.get_env(:stripe_mock, __MODULE__, [])
+    |> Keyword.get(:enabled, true)
   end
 
   def ecto_config() do
@@ -14,7 +19,7 @@ defmodule StripeMock.Database do
   end
 
   @impl true
-  def init(_) do
+  def init(true) do
     {uri, _} = System.cmd("pg_tmp", ["-t", "-w", "180"])
 
     [[username, host, port, database]] =
@@ -31,6 +36,10 @@ defmodule StripeMock.Database do
     ]
 
     {:ok, config}
+  end
+
+  def init(_) do
+    {:ok, []}
   end
 
   @impl true

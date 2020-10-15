@@ -4,7 +4,10 @@ defmodule StripeMock.Repo do
   alias StripeMock.Database
 
   def init(_type, config) do
-    {:ok, Keyword.merge(config, Database.ecto_config())}
+    case Database.enabled?() do
+      true -> {:ok, Keyword.merge(config, Database.ecto_config())}
+      _ -> {:ok, config}
+    end
   end
 
   def fetch(schema, id) do

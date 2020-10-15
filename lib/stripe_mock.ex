@@ -24,4 +24,24 @@ defmodule StripeMock do
   stores everything in its state. It'd be nice if `ecto_mnesia` was updated for
   Ecto 3, but as of right now this is the next best option.
   """
+
+  @doc """
+  Truncates all tables.
+  """
+  def reset() do
+    StripeMock.Repo.query!("""
+    TRUNCATE
+      cards,
+      customers,
+      tokens,
+      sources,
+      payment_methods,
+      payment_intents,
+      charges,
+      refunds
+    CASCADE
+    """)
+
+    :ok
+  end
 end
