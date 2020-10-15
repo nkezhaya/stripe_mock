@@ -38,7 +38,21 @@ defmodule StripeMock.Database do
     {:ok, config}
   end
 
-  def init(_) do
+  def init(false) do
+    # Create the permanent database
+    config = Application.get_env(:stripe_mock, StripeMock.Repo)
+
+    case Ecto.Adapters.Postgres.storage_up(config) do
+      :ok ->
+        nil
+
+      {:error, :already_up} ->
+        nil
+
+      {:error, term} ->
+        raise "The database couldn't be created: #{inspect(term)}"
+    end
+
     {:ok, []}
   end
 
