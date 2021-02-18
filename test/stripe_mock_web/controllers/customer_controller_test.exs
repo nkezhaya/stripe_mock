@@ -29,7 +29,7 @@ defmodule StripeMockWeb.CustomerControllerTest do
 
     test "renders customer data", %{conn: conn, customer: customer} do
       conn = get(conn, Routes.customer_path(conn, :show, customer.id))
-      assert %{"id" => "cus_" <> id} = json_response(conn, 200)
+      assert %{"id" => "cus_" <> _id} = json_response(conn, 200)
     end
 
     test "renders 404 on not found", %{conn: conn} do
@@ -45,7 +45,7 @@ defmodule StripeMockWeb.CustomerControllerTest do
 
       conn = get(conn, Routes.customer_path(conn, :show, id))
 
-      assert %{"id" => "cus_" <> id} = json_response(conn, 200)
+      assert %{"id" => "cus_" <> _id} = json_response(conn, 200)
     end
 
     test "renders errors when data is invalid", %{conn: conn} do

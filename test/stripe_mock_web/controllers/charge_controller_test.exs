@@ -30,7 +30,7 @@ defmodule StripeMockWeb.ChargeControllerTest do
       conn = get(conn, Routes.charge_path(conn, :show, id))
 
       assert %{
-               "id" => "ch_" <> id,
+               "id" => "ch_" <> _id,
                "amount" => 5000,
                "amount_refunded" => 0,
                "currency" => "some currency",
@@ -53,7 +53,7 @@ defmodule StripeMockWeb.ChargeControllerTest do
       conn = get(conn, Routes.charge_path(conn, :show, id))
 
       assert %{
-               "id" => id,
+               "id" => _id,
                "amount" => 5000,
                "currency" => "some currency",
                "customer" => nil,

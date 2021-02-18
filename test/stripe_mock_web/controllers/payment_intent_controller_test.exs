@@ -30,7 +30,7 @@ defmodule StripeMockWeb.PaymentIntentControllerTest do
       conn = get(conn, Routes.payment_intent_path(conn, :show, id))
 
       assert %{
-               "id" => id,
+               "id" => _id,
                "amount" => 5000,
                "capture_method" => "manual",
                "confirmation_method" => "manual",
@@ -54,7 +54,7 @@ defmodule StripeMockWeb.PaymentIntentControllerTest do
       conn = get(conn, Routes.payment_intent_path(conn, :show, id))
 
       assert %{
-               "id" => id,
+               "id" => _id,
                "amount" => 5000,
                "currency" => "some currency",
                "customer" => nil,
