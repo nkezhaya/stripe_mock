@@ -56,8 +56,8 @@ defmodule StripeMock.MixProject do
       {:jason, "~> 1.0"},
       {:plug_cowboy, "~> 2.0"},
       {:postgrex, ">= 0.0.0"},
-      {:ecto, "~> 3.2"},
-      {:ecto_sql, "~> 3.2"},
+      {:ecto, "~> 3.5"},
+      {:ecto_sql, "~> 3.5"},
       {:ex_doc, ">= 0.0.0", only: :dev}
     ]
   end
