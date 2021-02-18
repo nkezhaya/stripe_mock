@@ -13,6 +13,4 @@ config :stripe_mock, StripeMock.Repo,
   port: System.get_env("POSTGRES_PORT", "5432"),
   username: "postgres",
   password: "postgres",
-  pool: Ecto.Adapters.SQL.Sandbox,
-  ownership_timeout: 30_000,
-  timeout: 30_000
+  pool: Ecto.Adapters.SQL.Sandbox

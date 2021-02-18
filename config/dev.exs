@@ -12,7 +12,6 @@ config :stripe_mock, StripeMockWeb.Endpoint,
   check_origin: false,
   watchers: []
 
-
 config :stripe_mock, StripeMock.Database, enabled: false
 
 config :stripe_mock, StripeMock.Repo,
@@ -22,9 +21,7 @@ config :stripe_mock, StripeMock.Repo,
   port: 5432,
   username: "postgres",
   password: "postgres",
-  pool: Ecto.Adapters.SQL.Sandbox,
-  ownership_timeout: 30_000,
-  timeout: 30_000
+  pool: Ecto.Adapters.SQL.Sandbox
 
 # ## SSL Support
 #
