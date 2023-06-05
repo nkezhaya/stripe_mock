@@ -7,7 +7,6 @@ defmodule StripeMock.MixProject do
       version: "0.1.0",
       elixir: "~> 1.5",
       elixirc_paths: elixirc_paths(Mix.env()),
-      compilers: [:phoenix, :gettext] ++ Mix.compilers(),
       start_permanent: false,
       description: description(),
       package: package(),
@@ -51,6 +50,7 @@ defmodule StripeMock.MixProject do
   defp deps do
     [
       {:phoenix, ">= 0.0.0"},
+      {:phoenix_view, ">= 0.0.0"},
       {:phoenix_ecto, ">= 0.0.0"},
       {:gettext, "~> 0.11"},
       {:jason, "~> 1.0"},
